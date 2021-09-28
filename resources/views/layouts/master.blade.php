@@ -87,7 +87,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           <li class="nav-item">
               <router-link to="/dashboard" href="#" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <i class="nav-icon fas fa-tachometer-alt blue"></i>
                 <p>
                   Dashboard
                 </p>
@@ -97,7 +97,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cog"></i>
+              <i class="nav-icon fas fa-cog green"></i>
               <p>
                 Management
                 <i class="right fas fa-angle-left"></i>
@@ -105,34 +105,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Active Page</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Inactive Page</p>
-                </a>
+                <router-link to="/Users" class="nav-link active">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Users</p>
+                </router-link>
               </li>
             </ul>
           </li>
           <li class="nav-item">
             <router-link to="/profile" href="#" class="nav-link">
-              <i class="nav-icon fas fa-user"></i>
+              <i class="nav-icon fas fa-user orange"></i>
               <p>
                 Profile
               </p>
             </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fa fa-power-off"></i>
+          <a class="nav-link" href="{{ route('logout') }}"
+            onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();">
+            <i class="nav-icon fa fa-power-off red"></i>
             <p>
-              Logout
+              {{ __('Logout') }}
             </p>
-          </a>
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+             @csrf
+            </form>
       </li>
         </ul>
       </nav>
