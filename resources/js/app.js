@@ -7,6 +7,8 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
+import Form from 'vform'
+window.Form = Form;
 // import Vue from 'vue'
 import router from './router'
 
@@ -32,4 +34,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
     router,
+    
 });
