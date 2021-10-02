@@ -19,15 +19,17 @@
                       <th>Name</th>
                       <th>Email</th>
                       <th>Type</th>
+                      <th>Registered  At</th>
                       <th>Mordify</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>183</td>
-                      <td>John Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-success">Approved</span></td>
+                    <tr v-for="user in users.data" :key="user.id">
+                      <td>{{user.id}}</td>
+                      <td>{{user.name}}</td>
+                      <td>{{user.email}}</td>
+                      <td>{{user.type | upText}}</td>
+                      <td>{{user.created_at | myDate}}</td>
                       <td>
                           <a href="#">
                                <i class="fa fa-edit blue"></i>
@@ -36,7 +38,7 @@
                           <a href="#">
                                <i class="fa fa-trash red"></i>
                           </a>
-                          <a href=""></a>
+                          
                       </td>
                     </tr>
                    
@@ -55,7 +57,7 @@
                   <h5 class="modal-title" id="addNewLabel">Add New</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <form @submit.prevent="createUser">
+              <form @submit.prevent="createUser" @keydown="form.onKeydown($event)">
                 <div class="modal-body">
                   <div class="form-group">
                       <input v-model="form.name" type="text" name="name"
@@ -67,38 +69,38 @@
                         <div class="form-group">
                             <input v-model="form.email" type="email" name="email"
                                 placeholder="Email Address"
-                                class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
-                            <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
+                                class="form-control">
+                            <div v-if="form.errors.has('email')" v-html="form.errors.get('email')" />
                         </div>
 
                         <div class="form-group">
                             <textarea v-model="form.bio" name="bio" id="bio"
                             placeholder="Short bio for user (Optional)"
-                            class="form-control" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
-                            <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
+                            class="form-control"></textarea>
+                            <div v-if="form.errors.has('bio')" v-html="form.errors.get('bio')" />
                         </div>
 
 
                         <div class="form-group">
-                            <select name="type" v-model="form.type" id="type" class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">
+                            <select name="type" v-model="form.type" id="type" class="form-control">
                                 <option value="">Select User Role</option>
                                 <option value="admin">Admin</option>
                                 <option value="user">Standard User</option>
                                 <option value="author">Author</option>
                             </select>
-                            <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
+                            <div v-if="form.errors.has('type')" v-html="form.errors.get('type')" />
                         </div>
 
                         <div class="form-group">
                             <input v-model="form.password" type="password" name="password" id="password"
-                            class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                            <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
+                            class="form-control" placeholder="Password">
+                            <div v-if="form.errors.has('password')" v-html="form.errors.get('password')" />
                         </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-success">Update</button>
-                    <button type="button" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
               </form>
             </div>
@@ -113,6 +115,7 @@
     export default {
         data(){
             return {
+                users: {},
                 form: new Form({
                     id:'',
                     name : '',
@@ -125,13 +128,16 @@
             }
         },
         methods: {
+        loadUsera(){
+            axios.get("/api/user").then(({ data }) => (this.users = data)) 
+          },
          async createUser(){
             const response = await this.form.post('/api/user')
-            console.log(this.form)
+            
           },
         },
-        mounted() {
-            console.log('Component mounted.')
+        created() {
+           this.loadUsera();
         }
     }
 </script>
