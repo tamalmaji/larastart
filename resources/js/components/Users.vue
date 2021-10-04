@@ -35,7 +35,7 @@
                                <i class="fa fa-edit blue"></i>
                           </a>
                           /
-                          <a href="#">
+                          <a href="#" @click="deleteUser(user.id)">
                                <i class="fa fa-trash red"></i>
                           </a>
                           
@@ -128,16 +128,60 @@
             }
         },
         methods: {
+        deleteUser(id){
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            // Send request to the server
+            this.form.delete('api/user/'+id).then(()=>{
+               if (result.isConfirmed) {
+                  Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                  )
+                  Fire.$emit('AfterCreate');
+                }
+            }).catch(()=>{
+              swal("Failed!", "There was something wronge.", "warning");
+            })
+           
+          })
+        },
         loadUsera(){
             axios.get("/api/user").then(({ data }) => (this.users = data)) 
           },
          async createUser(){
+            this.$Progress.start()
             const response = await this.form.post('/api/user')
+            .then(()=>{
+                  Fire.$emit('AfterCreate');
+                $('#addNew').modal('hide')
+                toast.fire({
+                  icon: 'success',
+                  title: 'User Created successfully'
+                })
+                this.$Progress.finish()
+            })
+            .catch(()=>{
+              
+            })
             
           },
         },
         created() {
            this.loadUsera();
+           
+           Fire.$on('AfterCreate', () => {
+           this.loadUsera();
+           });
+            // setInterval(() => this.loadUsera(), 3000);
         }
     }
 </script>
