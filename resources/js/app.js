@@ -67,6 +67,14 @@ const options = {
 
   window.Fire =  new Vue();
   
+  import passportclients from './components/passport/Clients.vue';
+  Vue.component('passport-clients', passportclients);
+
+  import passportauthorizedclients from './components/passport/AuthorizedClients.vue';
+  Vue.component('passport-authorized-clients', passportauthorizedclients);
+
+  import passportpersonalaccesstokens from './components/passport/PersonalAccessTokens.vue';
+  Vue.component('passport-personal-access-tokens', passportpersonalaccesstokens);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 

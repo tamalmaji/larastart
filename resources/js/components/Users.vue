@@ -7,7 +7,7 @@
                 <h3 class="card-title">User Table</h3>
 
                 <div class="card-tools">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNew">Add New <i class="fas fa-user-plus fa-fw"></i></button>
+                    <button class="btn btn-success" @click="newModal">Add New <i class="fas fa-user-plus fa-fw"></i></button>
                 </div>
               </div>
               <!-- /.card-header -->
@@ -31,7 +31,7 @@
                       <td>{{user.type | upText}}</td>
                       <td>{{user.created_at | myDate}}</td>
                       <td>
-                          <a href="#">
+                          <a href="#" @click="editModal(user)">
                                <i class="fa fa-edit blue"></i>
                           </a>
                           /
@@ -54,10 +54,11 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="addNewLabel">Add New</h5>
+                  <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New user</h5>
+                  <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update user's Info</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <form @submit.prevent="createUser" @keydown="form.onKeydown($event)">
+              <form @submit.prevent="editmode ? updateUser() : createUser()" @keydown="form.onKeydown($event)">
                 <div class="modal-body">
                   <div class="form-group">
                       <input v-model="form.name" type="text" name="name"
@@ -99,8 +100,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Update</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
+                    <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
                 </div>
               </form>
             </div>
@@ -115,6 +116,7 @@
     export default {
         data(){
             return {
+              editmode: false,
                 users: {},
                 form: new Form({
                     id:'',
@@ -128,6 +130,37 @@
             }
         },
         methods: {
+          updateUser(){
+            this.$Progress.start()
+            // console.log('editingdata')
+            this.form.put('api/user/' +this.form.id)
+            .then(()=>{
+              // success
+                $('#addNew').modal('hide');
+               Swal.fire(
+                    'Updated!',
+                    'Information has been updated.',
+                    'success'
+                  )
+                this.$Progress.finish();
+                Fire.$emit('AfterCreate');
+            })
+            .catch(() =>{
+            this.$Progress.fail()
+
+            })
+          },
+          editModal(user){
+            this.editmode = true;
+            this.form.reset();
+            $('#addNew').modal('show');
+            this.form.fill(user);
+          },
+          newModal(){
+            this.editmode = false;
+            this.form.reset();
+            $('#addNew').modal('show');
+          },
         deleteUser(id){
           Swal.fire({
             title: 'Are you sure?',

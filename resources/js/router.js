@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 import dashboard from './components/dashboard'
+import developer from './components/developer'
 import profile from './components/profile'
 import Users from './components/Users'
 const routes = [
@@ -10,6 +11,11 @@ const routes = [
         path: '/dashboard',
         component: dashboard,
         name: ' dashboard'
+    },
+    {
+        path: '/developer',
+        component: developer,
+        name: ' developer'
     },
     {
         path: '/profile',
