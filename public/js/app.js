@@ -3428,6 +3428,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -3441,6 +3442,43 @@ __webpack_require__.r(__webpack_exports__);
         photo: ''
       })
     };
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get("api/profile").then(function (_ref) {
+      var data = _ref.data;
+      return _this.form.fill(data);
+    });
+  },
+  methods: {
+    updateInfo: function updateInfo() {
+      this.form.put('api/profile').then(function () {})["catch"](function () {});
+    },
+    updateProfile: function updateProfile(e) {
+      var _this2 = this;
+
+      // console.log('Uplodaing')
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      var limit = 1024 * 1024 * 2;
+
+      if (file['size'] > limit) {
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'You are uploading a large file'
+        });
+        return false;
+      }
+
+      reader.onloadend = function (file) {
+        // console.log('RESULT', reader.result)
+        _this2.form.photo = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
   },
   mounted: function mounted() {
     console.log("Component mounted.");
@@ -67291,11 +67329,28 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-sm-12" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "",
                             id: "inputName",
                             placeholder: "Name"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
                           }
                         }),
                         _vm._v(" "),
@@ -67321,11 +67376,28 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-sm-12" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.email,
+                              expression: "form.email"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "email",
                             id: "inputEmail",
                             placeholder: "Email"
+                          },
+                          domProps: { value: _vm.form.email },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "email", $event.target.value)
+                            }
                           }
                         }),
                         _vm._v(" "),
@@ -67351,10 +67423,27 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-sm-12" }, [
                         _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.bio,
+                              expression: "form.bio"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             id: "inputExperience",
                             placeholder: "Experience"
+                          },
+                          domProps: { value: _vm.form.bio },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "bio", $event.target.value)
+                            }
                           }
                         }),
                         _vm._v(" "),
@@ -67368,7 +67457,24 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(3),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-sm-2 control-label",
+                          attrs: { for: "photo" }
+                        },
+                        [_vm._v("Profile Photo")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-12" }, [
+                        _c("input", {
+                          staticClass: "form-input",
+                          attrs: { type: "file", name: "photo" },
+                          on: { change: _vm.updateProfile }
+                        })
+                      ])
+                    ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group" }, [
                       _c(
@@ -67382,11 +67488,32 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-sm-12" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.password,
+                              expression: "form.password"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "password",
                             id: "password",
                             placeholder: "Passport"
+                          },
+                          domProps: { value: _vm.form.password },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "password",
+                                $event.target.value
+                              )
+                            }
                           }
                         }),
                         _vm._v(" "),
@@ -67402,7 +67529,28 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(4)
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("div", { staticClass: "col-sm-offset-2 col-sm-12" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success",
+                            attrs: { type: "submit" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.updateInfo.apply(null, arguments)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                      Update\n                    "
+                            )
+                          ]
+                        )
+                      ])
+                    ])
                   ])
                 ]
               )
@@ -67523,39 +67671,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "tab-pane", attrs: { id: "activity" } }, [
       _c("h3", { staticClass: "text-center" }, [
         _vm._v("Display User Activity")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c(
-        "label",
-        { staticClass: "col-sm-2 control-label", attrs: { for: "photo" } },
-        [_vm._v("Profile Photo")]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "file", name: "photo" }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "col-sm-offset-2 col-sm-12" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-success", attrs: { type: "submit" } },
-          [_vm._v("\n                      Update\n                    ")]
-        )
       ])
     ])
   }

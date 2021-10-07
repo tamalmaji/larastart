@@ -93,7 +93,7 @@
                     <div class="col-sm-12">
                       <input
                         type=""
-                        
+                        v-model="form.name"
                         class="form-control"
                         id="inputName"
                         placeholder="Name"
@@ -110,7 +110,7 @@
                     <div class="col-sm-12">
                       <input
                         type="email"
-                        
+                        v-model="form.email"
                         class="form-control"
                         id="inputEmail"
                         placeholder="Email"
@@ -128,6 +128,7 @@
 
                     <div class="col-sm-12">
                       <textarea
+                        v-model="form.bio"
                         class="form-control"
                         id="inputExperience"
                         placeholder="Experience"
@@ -143,7 +144,7 @@
                     <div class="col-sm-12">
                       <input
                         type="file"
-                        
+                        @change="updateProfile"
                         name="photo"
                         class="form-input"
                       />
@@ -159,7 +160,7 @@
                     <div class="col-sm-12">
                       <input
                         type="password"
-                       
+                        v-model="form.password"
                         class="form-control"
                         id="password"
                         placeholder="Passport"
@@ -173,7 +174,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-12">
                       <button
-                        
+                        @click.prevent="updateInfo"
                         type="submit"
                         class="btn btn-success"
                       >
@@ -211,6 +212,41 @@ export default {
                 })
             }
         },
+    created(){
+     axios.get("api/profile").then(({ data }) => (this.form.fill(data)));
+    },
+    methods: {
+      updateInfo(){
+          this.form.put('api/profile')
+          .then(()=>{
+
+          })
+          .catch(()=>{
+
+          });
+      },
+      updateProfile(e){
+        // console.log('Uplodaing')
+        
+      let file = e.target.files[0];
+      let reader = new  FileReader();
+      let limit = 1024 * 1024 * 2;
+        if(file['size'] > limit){
+          swal({
+            type: 'error',
+            title: 'Oops...',
+            text: 'You are uploading a large file',
+          })
+          return false;
+        }
+      reader.onloadend = (file) => {
+        // console.log('RESULT', reader.result)
+        this.form.photo = reader.result;
+
+      }
+        reader.readAsDataURL(file);
+      }
+    },
     mounted() {
         console.log("Component mounted.");
     },
