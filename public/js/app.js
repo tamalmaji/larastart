@@ -2249,6 +2249,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -3453,31 +3454,37 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     updateInfo: function updateInfo() {
-      this.form.put('api/profile').then(function () {})["catch"](function () {});
+      var _this2 = this;
+
+      this.$Progress.start();
+      this.form.put('api/profile').then(function () {
+        _this2.$Progress.finish();
+      })["catch"](function () {
+        _this2.$Progress.fail();
+      });
     },
     updateProfile: function updateProfile(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       // console.log('Uplodaing')
       var file = e.target.files[0];
       var reader = new FileReader();
       var limit = 1024 * 1024 * 2;
 
-      if (file['size'] > limit) {
-        swal({
-          type: 'error',
+      if (file['size'] < limit) {
+        reader.onloadend = function (file) {
+          // console.log('RESULT', reader.result)
+          _this3.form.photo = reader.result;
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        Swal.fire({
+          icon: 'error',
           title: 'Oops...',
           text: 'You are uploading a large file'
         });
-        return false;
       }
-
-      reader.onloadend = function (file) {
-        // console.log('RESULT', reader.result)
-        _this2.form.photo = reader.result;
-      };
-
-      reader.readAsDataURL(file);
     }
   },
   mounted: function mounted() {
@@ -65845,6 +65852,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
+                        class: { "is-invalid": _vm.form.errors.has("name") },
                         attrs: {
                           type: "text",
                           name: "name",
@@ -65881,6 +65889,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
+                        class: { "is-invalid": _vm.form.errors.has("email") },
                         attrs: {
                           type: "email",
                           name: "email",
@@ -65917,6 +65926,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
+                        class: { "is-invalid": _vm.form.errors.has("bio") },
                         attrs: {
                           name: "bio",
                           id: "bio",
@@ -66015,6 +66025,9 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
+                        class: {
+                          "is-invalid": _vm.form.errors.has("password")
+                        },
                         attrs: {
                           type: "password",
                           name: "password",
@@ -67338,6 +67351,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("name") },
                           attrs: {
                             type: "",
                             id: "inputName",
@@ -67385,6 +67399,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("email") },
                           attrs: {
                             type: "email",
                             id: "inputEmail",
@@ -67497,6 +67512,9 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("password")
+                          },
                           attrs: {
                             type: "password",
                             id: "password",

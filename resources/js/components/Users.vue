@@ -62,22 +62,22 @@
                 <div class="modal-body">
                   <div class="form-group">
                       <input v-model="form.name" type="text" name="name"
-                                placeholder="Name"
-                                class="form-control">
+                          placeholder="Name"
+                          class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                         <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
                     </div>
                     
                         <div class="form-group">
                             <input v-model="form.email" type="email" name="email"
                                 placeholder="Email Address"
-                                class="form-control">
+                                class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
                             <div v-if="form.errors.has('email')" v-html="form.errors.get('email')" />
                         </div>
 
                         <div class="form-group">
                             <textarea v-model="form.bio" name="bio" id="bio"
                             placeholder="Short bio for user (Optional)"
-                            class="form-control"></textarea>
+                            class="form-control"  :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
                             <div v-if="form.errors.has('bio')" v-html="form.errors.get('bio')" />
                         </div>
 
@@ -94,7 +94,8 @@
 
                         <div class="form-group">
                             <input v-model="form.password" type="password" name="password" id="password"
-                            class="form-control" placeholder="Password">
+                            class="form-control" placeholder="Password" :class="{ 'is-invalid': form.errors.has('password') }"
+                                    >
                             <div v-if="form.errors.has('password')" v-html="form.errors.get('password')" />
                         </div>
                 </div>

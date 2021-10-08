@@ -97,7 +97,7 @@
                         class="form-control"
                         id="inputName"
                         placeholder="Name"
-                        
+                        :class="{ 'is-invalid': form.errors.has('name') }"
                       />
                         <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
                     </div>
@@ -114,7 +114,7 @@
                         class="form-control"
                         id="inputEmail"
                         placeholder="Email"
-                        
+                        :class="{ 'is-invalid': form.errors.has('email') }"
                       />
                         <div v-if="form.errors.has('email')" v-html="form.errors.get('email')" />
                       
@@ -164,7 +164,7 @@
                         class="form-control"
                         id="password"
                         placeholder="Passport"
-                        
+                        :class="{ 'is-invalid': form.errors.has('password') }"
                       />
                         <div v-if="form.errors.has('password')" v-html="form.errors.get('password')" />
                       
@@ -217,12 +217,13 @@ export default {
     },
     methods: {
       updateInfo(){
+          this.$Progress.start()
           this.form.put('api/profile')
           .then(()=>{
-
+            this.$Progress.finish();
           })
           .catch(()=>{
-
+            this.$Progress.fail()
           });
       },
       updateProfile(e){
@@ -230,21 +231,23 @@ export default {
         
       let file = e.target.files[0];
       let reader = new  FileReader();
-      let limit = 1024 * 1024 * 2;
-        if(file['size'] > limit){
-          swal({
-            type: 'error',
-            title: 'Oops...',
-            text: 'You are uploading a large file',
-          })
-          return false;
-        }
-      reader.onloadend = (file) => {
-        // console.log('RESULT', reader.result)
-        this.form.photo = reader.result;
 
-      }
+      let limit = 1024 * 1024 * 2;
+      if (file['size'] < limit) {
+        reader.onloadend = (file) => {
+          // console.log('RESULT', reader.result)
+          this.form.photo = reader.result;
+  
+        }
         reader.readAsDataURL(file);
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'You are uploading a large file',
+        })
+      }
+      
       }
     },
     mounted() {
