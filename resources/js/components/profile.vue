@@ -22,7 +22,7 @@
             <h5 class="widget-user-desc text-right">Web Designer</h5>
           </div>
           <div class="widget-user-image">
-            <img class="img-circle" src="" alt="User Avatar" />
+            <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar" />
           </div>
           <div class="card-footer">
             <div class="row">
@@ -216,10 +216,15 @@ export default {
      axios.get("api/profile").then(({ data }) => (this.form.fill(data)));
     },
     methods: {
+      getProfilePhoto(){
+        let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/"+ this.form.photo ;
+        return photo
+      },
       updateInfo(){
           this.$Progress.start()
           this.form.put('api/profile')
           .then(()=>{
+            Fire.$emit('AfterCreate');
             this.$Progress.finish();
           })
           .catch(()=>{
