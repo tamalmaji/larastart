@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-       <div class="row mt-5">
+       <div class="row mt-5" v-if="$gate.isAdminOrAuthor()">
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
@@ -46,8 +46,21 @@
                 </table>
               </div>
               <!-- /.card-body -->
+              <div class="card-footer">
+                <pagination :data="users" @pagination-change-page="getResults">
+                  <span slot="prev-nav">&lt; Previous</span>
+	                <span slot="next-nav">Next &gt;</span>
+                </pagination>
+              </div>
             </div>
             <!-- /.card -->
+          </div>
+
+          
+
+        </div>
+         <div v-if="!$gate.isAdminOrAuthor()">
+            <not-found></not-found>
           </div>
            <!-- Modal -->
         <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
@@ -108,7 +121,6 @@
             </div>
         </div>
         </div>
-        </div>
        
     </div>
 </template>
@@ -131,6 +143,13 @@
             }
         },
         methods: {
+          // Our method to GET results from a Laravel endpoint
+          getResults(page = 1) {
+            axios.get('api/user?page=' + page)
+              .then(response => {
+                this.users = response.data;
+              });
+          },
           updateUser(){
             this.$Progress.start()
             // console.log('editingdata')
@@ -194,7 +213,9 @@
           })
         },
         loadUsera(){
+          if (this.$gate.isAdminOrAuthor()) {
             axios.get("/api/user").then(({ data }) => (this.users = data)) 
+          }
           },
          async createUser(){
             this.$Progress.start()

@@ -10,9 +10,15 @@ window.Vue = require('vue').default;
 import moment from 'moment';
 import Form from 'vform';
 import Vue from 'vue';
+
+import Gate from "./Gate";
+Vue.prototype.$gate = new Gate(window.user);
+
+
 window.Form = Form;
 // import Vue from 'vue'
 import VueProgressBar from 'vue-progressbar'
+Vue.component('pagination', require('laravel-vue-pagination'));
 import router from './router'
 import Swal from 'sweetalert2'
 window.Swal = Swal;
@@ -75,6 +81,9 @@ const options = {
 
   import passportpersonalaccesstokens from './components/passport/PersonalAccessTokens.vue';
   Vue.component('passport-personal-access-tokens', passportpersonalaccesstokens);
+
+  import NotFound from './components/NotFound.vue';
+  Vue.component('not-found', NotFound);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
