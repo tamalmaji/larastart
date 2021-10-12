@@ -236,6 +236,15 @@
           },
         },
         created() {
+         Fire.$on('searching',() => {
+                let query = this.$parent.search;
+                axios.put('api/findUser?q=' + query)
+                .then((data) => {
+                    this.users = data.data
+                })
+                .catch(() => {
+                })
+            })
            this.loadUsera();
            
            Fire.$on('AfterCreate', () => {

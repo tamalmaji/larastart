@@ -2417,6 +2417,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     var _this6 = this;
 
+    Fire.$on('searching', function () {
+      var query = _this6.$parent.search;
+      axios.put('api/findUser?q=' + query).then(function (data) {
+        _this6.users = data.data;
+      })["catch"](function () {});
+    });
     this.loadUsera();
     Fire.$on('AfterCreate', function () {
       _this6.loadUsera();
@@ -3713,7 +3719,18 @@ vue__WEBPACK_IMPORTED_MODULE_3__["default"].component('example-component', __web
 
 var app = new vue__WEBPACK_IMPORTED_MODULE_3__["default"]({
   el: '#app',
-  router: _router__WEBPACK_IMPORTED_MODULE_5__["default"]
+  router: _router__WEBPACK_IMPORTED_MODULE_5__["default"],
+  data: {
+    search: ''
+  },
+  methods: {
+    searchit: _.debounce(function () {
+      Fire.$emit('searching');
+    }, 1000),
+    printme: function printme() {
+      window.print();
+    }
+  }
 });
 
 /***/ }),
